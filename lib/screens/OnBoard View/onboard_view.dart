@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/controllers/app_controller.dart';
 import 'package:test_app/screens/LoginPage/loginpage.dart';
-
 
 class OnboardingView extends StatelessWidget {
   final PageController _pageController = PageController();
@@ -16,15 +14,19 @@ class OnboardingView extends StatelessWidget {
     },
     {
       'title': 'Lorem ipsum is simply dummy text of the printing!',
-      'subtitle': 'Lorem ipsum is simply dummy text of the printing and typesetting industry.',
+      'subtitle':
+          'Lorem ipsum is simply dummy text of the printing and typesetting industry.',
       'emoji': '🧑‍🍳'
     },
     {
       'title': 'It is a long established fact that a reader will',
-      'subtitle': 'Lorem ipsum is simply dummy text of the printing and typesetting industry.',
+      'subtitle':
+          'Lorem ipsum is simply dummy text of the printing and typesetting industry.',
       'emoji': '👨‍🍳'
     },
   ];
+
+  OnboardingView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,46 +57,51 @@ class OnboardingView extends StatelessWidget {
   }
 
   Widget _buildOnboardingPage(Map<String, String> data) {
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.all(40),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 200,
-            height: 200,
-            decoration: BoxDecoration(
-              color: Colors.orange.shade100,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                data['emoji']!,
-                style: TextStyle(fontSize: 80),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: 500, // helps maintain spacing
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  data['emoji']!,
+                  style: TextStyle(fontSize: 80),
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 60),
-          Text(
-            data['title']!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+            SizedBox(height: 60),
+            Text(
+              data['title']!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            data['subtitle']!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey.shade600,
-              height: 1.5,
+            SizedBox(height: 20),
+            Text(
+              data['subtitle']!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+                height: 1.5,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -127,7 +134,8 @@ class OnboardingView extends StatelessWidget {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
-                if (appController.currentOnboardingPage < _onboardingData.length - 1) {
+                if (appController.currentOnboardingPage <
+                    _onboardingData.length - 1) {
                   _pageController.nextPage(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
@@ -147,7 +155,10 @@ class OnboardingView extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Next',
+                appController.currentOnboardingPage ==
+                        _onboardingData.length - 1
+                    ? 'Get Started'
+                    : 'Next',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

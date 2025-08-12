@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_app/controllers/home_controller.dart';
 
-
 class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Consumer<HomeController>(
-          builder: (context, homeController, _) {
-            return Column(
-              children: [
-                _buildHeader(),
-                _buildSpecialOffer(),
-                _buildCategories(homeController),
-                Expanded(
-                  child: _buildProductGrid(homeController),
-                ),
-              ],
-            );
-          },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: 80), // Space for bottom nav
+          child: Consumer<HomeController>(
+            builder: (context, homeController, _) {
+              return Column(
+                children: [
+                  _buildHeader(),
+                  _buildSpecialOffer(),
+                  _buildCategories(homeController),
+                  _buildProductGrid(homeController),
+                ],
+              );
+            },
+          ),
         ),
       ),
       bottomNavigationBar: _buildBottomNav(),
@@ -30,14 +32,14 @@ class HomeView extends StatelessWidget {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(16), // Reduced from 20
       child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hi, Shammas',
+                'Hi, Sharath',
                 style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
               ),
               Text(
@@ -58,8 +60,8 @@ class HomeView extends StatelessWidget {
 
   Widget _buildSpecialOffer() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Reduced margins
+      padding: EdgeInsets.all(12), // Reduced from 16
       decoration: BoxDecoration(
         color: Colors.orange.shade50,
         borderRadius: BorderRadius.circular(12),
@@ -93,16 +95,16 @@ class HomeView extends StatelessWidget {
 
   Widget _buildCategories(HomeController homeController) {
     return Container(
-      height: 120,
-      padding: EdgeInsets.symmetric(vertical: 20),
+      height: 100, // Reduced from 120
+      padding: EdgeInsets.symmetric(vertical: 10), // Reduced from 20
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 16), // Reduced from 20
         itemCount: homeController.categories.length,
         itemBuilder: (context, index) {
           final category = homeController.categories[index];
           final isSelected = category == homeController.selectedCategory;
-          
+
           return GestureDetector(
             onTap: () => homeController.selectCategory(category),
             child: Container(
@@ -128,7 +130,8 @@ class HomeView extends StatelessWidget {
                     category,
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                       color: isSelected ? Colors.orange : Colors.grey,
                     ),
                   ),
@@ -143,12 +146,14 @@ class HomeView extends StatelessWidget {
 
   Widget _buildProductGrid(HomeController homeController) {
     final products = homeController.filteredProducts;
-    
+
     return GridView.builder(
-      padding: EdgeInsets.all(20),
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(), // Prevent nested scrolling
+      padding: EdgeInsets.all(16), // Reduced from 20
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.8,
+        childAspectRatio: 0.85, // Adjusted from 0.8 for shorter items
         crossAxisSpacing: 15,
         mainAxisSpacing: 15,
       ),
@@ -174,7 +179,8 @@ class HomeView extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(12)),
                   ),
                   child: Center(
                     child: Text(
@@ -235,7 +241,8 @@ class HomeView extends StatelessWidget {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart), label: 'Cart'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
     );
@@ -243,12 +250,18 @@ class HomeView extends StatelessWidget {
 
   String _getCategoryEmoji(String category) {
     switch (category) {
-      case 'All': return '🍽️';
-      case 'Burger': return '🍔';
-      case 'Pizza': return '🍕';
-      case 'Drinks': return '🥤';
-      case 'Dessert': return '🍦';
-      default: return '🍽️';
+      case 'All':
+        return '🍽️';
+      case 'Burger':
+        return '🍔';
+      case 'Pizza':
+        return '🍕';
+      case 'Drinks':
+        return '🥤';
+      case 'Dessert':
+        return '🍦';
+      default:
+        return '🍽️';
     }
   }
 }

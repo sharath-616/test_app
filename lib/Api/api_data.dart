@@ -1,0 +1,1 @@
+const loginapi = 'https://fabrio-stage.innerix.in/api/login';

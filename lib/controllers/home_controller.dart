@@ -5,7 +5,7 @@ import 'package:test_app/Model/model.dart';
 
 class HomeController with ChangeNotifier {
   List<Product> _products = [];
-  List<String> _categories = ['All', 'Burger', 'Pizza', 'Drinks', 'Dessert'];
+  final List<String> _categories = ['All', 'Burger', 'Pizza', 'Drinks', 'Dessert'];
   String _selectedCategory = 'All';
 
   List<Product> get products => _products;
@@ -35,6 +35,6 @@ class HomeController with ChangeNotifier {
 
   List<Product> get filteredProducts {
     if (_selectedCategory == 'All') return _products;
-    return _products.where((p) => p?.category == _selectedCategory).toList();
+    return _products.where((p) => p.category == _selectedCategory).toList();
   }
 }
