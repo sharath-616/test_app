@@ -37,10 +37,11 @@ class OnboardingView extends StatelessWidget {
           return Column(
             children: [
               Expanded(
+ 
                 child: PageView.builder(
                   controller: _pageController,
                   onPageChanged: (index) {
-                    appController.setOnboardingPage(index);
+                  appController.setOnboardingPage(index);
                   },
                   itemCount: _onboardingData.length,
                   itemBuilder: (context, index) {
@@ -61,7 +62,7 @@ class OnboardingView extends StatelessWidget {
       padding: EdgeInsets.all(40),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          minHeight: 500, // helps maintain spacing
+          minHeight: 500, 
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -172,3 +173,4 @@ class OnboardingView extends StatelessWidget {
     );
   }
 }
+                                                                                                  

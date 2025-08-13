@@ -3,14 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:test_app/controllers/app_controller.dart';
 import 'package:test_app/controllers/auth_controller.dart';
 
-
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
-
   @override
   Widget build(BuildContext context) {
     print('Building LoginView');
-    final formKey = GlobalKey<FormState>(); 
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -19,7 +17,10 @@ class LoginView extends StatelessWidget {
         leading: Navigator.canPop(context)
             ? IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  print('Back button pressed');
+                  Navigator.pop(context);
+                },
               )
             : null,
       ),
@@ -69,13 +70,19 @@ class LoginView extends StatelessWidget {
                       onPressed: authController.isLoading
                           ? null
                           : () async {
+                              print('Sign In button pressed');
                               bool success = await authController.signIn(formKey);
                               if (success) {
+                                print('Login successful, navigating to /home');
+                                // ignore: use_build_context_synchronously
                                 context.read<AppController>().login();
                                 Navigator.pushReplacementNamed(
+                                  // ignore: use_build_context_synchronously
                                   context,
-                                  '/google_verification',
+                                  '/home',
                                 );
+                              } else {
+                                print('Login failed, not navigating');
                               }
                             },
                       style: ElevatedButton.styleFrom(
@@ -113,13 +120,19 @@ class LoginView extends StatelessWidget {
                     height: 50,
                     child: OutlinedButton.icon(
                       onPressed: () async {
+                        print('Google Sign-In button pressed');
                         bool success = await authController.signInWithGoogle();
                         if (success) {
+                          print('Google Sign-In successful, navigating to /home');
+                          // ignore: use_build_context_synchronously
                           context.read<AppController>().login();
                           Navigator.pushReplacementNamed(
+                            // ignore: use_build_context_synchronously
                             context,
-                            '/google_verification',
+                            '/home',
                           );
+                        } else {
+                          print('Google Sign-In failed, not navigating');
                         }
                       },
                       icon: const Text(

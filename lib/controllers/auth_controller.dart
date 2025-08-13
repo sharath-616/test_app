@@ -1,20 +1,23 @@
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:test_app/Api/api_data.dart';
+import 'package:test_app/api/api_data.dart';
 
 class AuthController with ChangeNotifier {
   bool _isLoading = false;
   String _email = '';
   String _password = '';
   String? _errorMessage;
+  String? _accessToken;
+  String? _refreshToken;
 
   bool get isLoading => _isLoading;
   String get email => _email;
   String get password => _password;
   String? get errorMessage => _errorMessage;
+  String? get accessToken => _accessToken;
+  String? get refreshToken => _refreshToken;
 
   void setEmail(String email) {
     _email = email;
@@ -49,17 +52,23 @@ class AuthController with ChangeNotifier {
   }
 
   bool validateForm(GlobalKey<FormState> formKey) {
-    return formKey.currentState?.validate() ?? false;
+    final isValid = formKey.currentState?.validate() ?? false;
+    print('Form validation result: $isValid');
+    return isValid;
   }
 
   Future<bool> signIn(GlobalKey<FormState> formKey) async {
-    if (!validateForm(formKey)) return false;
+    if (!validateForm(formKey)) {
+      print('Form validation failed');
+      return false;
+    }
 
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
+      print('Sending login request to $loginapi with email: $_email');
       final response = await http.post(
         Uri.parse(loginapi),
         headers: {
@@ -77,24 +86,30 @@ class AuthController with ChangeNotifier {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         print('SignIn Response data: $responseData');
-        if (responseData['success'] == true) {
+        if (responseData['status'] == true) { 
+          _accessToken = responseData['access_token'];
+          _refreshToken = responseData['refresh_token'];
+          print('Login successful, access_token: $_accessToken');
           _isLoading = false;
           notifyListeners();
           return true;
         } else {
           _errorMessage = responseData['message'] ?? 'Login failed';
+          print('Login failed: $_errorMessage');
           _isLoading = false;
           notifyListeners();
           return false;
         }
       } else {
         _errorMessage = 'Error: ${response.statusCode}. Please try again.';
+        print('Login error: $_errorMessage');
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
       _errorMessage = 'Network error: $e';
+      print('Network error: $_errorMessage');
       _isLoading = false;
       notifyListeners();
       return false;
@@ -105,7 +120,9 @@ class AuthController with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
+    print('Simulating Google Sign-In');
     await Future.delayed(const Duration(seconds: 2));
+    print('Google Sign-In successful (simulated)');
 
     _isLoading = false;
     notifyListeners();
